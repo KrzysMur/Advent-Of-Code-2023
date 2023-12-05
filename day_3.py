@@ -93,7 +93,7 @@ def main():
                 pass
 
             j += 1
-    print(sum(numbers_to_sum))
-    print(sum(ratios_to_sum))
+    print(sum(numbers_to_sum), sum(ratios_to_sum))
+
 
 main()
