@@ -1,16 +1,16 @@
 with open("puzzle_inputs/day_11_input.txt") as file:
     lines = [list(line.rstrip("\n")) for line in file.readlines()]
+EXPANSION_RATE = 1000000
 
 
 def main():
-    expand_columns()
-    expand_rows()
     galaxies = get_galaxies_coordinates()
     total = 0
-    for galaxy1 in galaxies:
-        for galaxy2 in galaxies:
-            total += get_distance(galaxy1, galaxy2)
-    print(total//2)
+
+    for i in range(len(galaxies)):
+        for j in range(i, len(galaxies)):
+            total += get_distance(galaxies[i], galaxies[j])
+    print(total)
 
 
 def get_distance(g1, g2):
@@ -22,28 +22,27 @@ def get_galaxies_coordinates():
     for i in range(len(lines)):
         for j in range(len(lines[0])):
             if lines[i][j] == "#":
-                galaxies.append((j, i))
+                x = j + count_empty_columns_before(j) * (EXPANSION_RATE - 1)
+                y = i + count_empty_rows_before(i) * (EXPANSION_RATE - 1)
+                galaxies.append([x, y])
     return galaxies
 
 
-def expand_rows():
-    i = 0
-    while i < len(lines):
-        if "#" not in lines[i]:
-            lines.insert(i, lines[i])
-            i += 1
-        i += 1
+def count_empty_columns_before(j):
+    counter = 0
+    for i in range(j):
+        col = [line[i] for line in lines]
+        if "#" not in col:
+            counter += 1
+    return counter
 
 
-def expand_columns():
-    i = 0
-    while i < len(lines[0]):
-        column = [line[i] for line in lines]
-        if "#" not in column:
-            for j in range(len(lines)):
-                lines[j].insert(i, ".")
-            i += 1
-        i += 1
+def count_empty_rows_before(i):
+    counter = 0
+    for row in lines[:i]:
+        if "#" not in row:
+            counter += 1
+    return counter
 
 
 main()
